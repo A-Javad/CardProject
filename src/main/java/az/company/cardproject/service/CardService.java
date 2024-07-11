@@ -39,7 +39,7 @@ public class CardService {
         )).orElseThrow(null);
     }
     public void saveCards(Card card){
-        card.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        card.setCreatedAt(LocalDateTime.now());
          cardRepository.save(card);
     }
 

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+
 @Service
 public class TransactionService {
 
@@ -38,7 +40,7 @@ public class TransactionService {
         transaction.setType(type);
         transaction.setAmount(amount);
         transaction.setHasCashback(hasCashback);
-        transaction.setCreatedAt(Timestamp.from(Instant.now()));
+        transaction.setCreatedAt(LocalDateTime.now());
         transaction.setCard(card);
         transactionRepository.save(transaction);
         cardRepository.save(card);
