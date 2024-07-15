@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,6 +14,4 @@ public class CardDTO {
     private String pan;
     private Long customerId;
     private BigDecimal balance;
-
-
 }

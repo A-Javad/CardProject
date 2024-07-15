@@ -17,11 +17,8 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
     @Column(name = "type", nullable = false)
     private String type;
-
 
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
