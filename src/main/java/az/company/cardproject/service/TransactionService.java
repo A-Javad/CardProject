@@ -11,10 +11,7 @@ import az.company.cardproject.model.exception.CardNotFoundException;
 import az.company.cardproject.model.exception.InsufficientBalanceException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Service
@@ -22,10 +19,12 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final CardRepository cardRepository;
     private final CashbackClient cashbackClient;
-    public TransactionService(TransactionRepository transactionRepository, CardRepository cardRepository, CashbackClient cashbackClient) {
+    private final TransactionMapper transactionMapper;
+    public TransactionService(TransactionRepository transactionRepository, CardRepository cardRepository, CashbackClient cashbackClient, TransactionMapper transactionMapper) {
         this.transactionRepository = transactionRepository;
         this.cardRepository = cardRepository;
         this.cashbackClient = cashbackClient;
+        this.transactionMapper = transactionMapper;
     }
     @Transactional
     public TransactionDTO performTransaction(Long cardId, String type, BigDecimal amount, Boolean hasCashback) throws InsufficientBalanceException {
@@ -55,7 +54,7 @@ public class TransactionService {
         }
         transactionRepository.save(transaction);
         cardRepository.save(card);
-        return TransactionMapper.INSTANCE.transactionToTransactionDTO(transaction);
+        return transactionMapper.transactionToTransactionDTO(transaction);
     }
     private Transaction createTransaction(Card card,String type,BigDecimal amount,Boolean hasCashback){
         Transaction transaction = new Transaction();

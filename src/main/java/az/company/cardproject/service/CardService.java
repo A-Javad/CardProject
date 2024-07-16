@@ -4,7 +4,6 @@ import az.company.cardproject.dao.entity.Card;
 import az.company.cardproject.dao.repository.CardRepository;
 import az.company.cardproject.mapper.CardMapper;
 import az.company.cardproject.model.dto.CardDTO;
-import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,22 +13,24 @@ import java.util.stream.Collectors;
 
 @Service
 public class CardService {
+    private final CardMapper cardMapper;
 
     private final CardRepository cardRepository;
 
-    public CardService(CardRepository cardRepository) {
+    public CardService(CardMapper cardMapper, CardRepository cardRepository) {
+        this.cardMapper = cardMapper;
         this.cardRepository = cardRepository;
     }
     public List<CardDTO>getAllCards(){
         List<Card> cards = cardRepository.findAll();
         return cards.stream()
-                .map(CardMapper.INSTANCE::cardTOCardDTO)
+                .map(cardMapper::cardToCardDTO)
                 .collect(Collectors.toList());
     }
     public CardDTO getCardsById(Long id){
         Card card = cardRepository.findById(id)
                 .orElseThrow(() ->new RuntimeException("Card not found with id"));
-        return CardMapper.INSTANCE.cardTOCardDTO(card);
+        return cardMapper.cardToCardDTO(card);
 
     }
     public void saveCards(Card card){

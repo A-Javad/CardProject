@@ -1,5 +1,6 @@
 package az.company.cardproject.controller;
 
+import az.company.cardproject.service.CashbackService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,10 +11,17 @@ import java.util.Map;
 
 @RestController
 public class CashbackController {
+    private final CashbackService cashbackService;
+
+    public CashbackController(CashbackService cashbackService) {
+        this.cashbackService = cashbackService;
+    }
+
     @GetMapping("/cashback")
     public Map<String, BigDecimal> getCashback(@RequestParam BigDecimal amount) {
-        Map<String, BigDecimal> response = new HashMap<>();
-        response.put("cashback", amount.multiply(BigDecimal.valueOf(0.005))); // 0.5% cashback
+        BigDecimal cashbackAmount=cashbackService.calculateCashback(amount);
+        Map<String,BigDecimal>response = new HashMap<>();
+        response.put("cashback",cashbackAmount);
         return response;
     }
 }
