@@ -1,5 +1,6 @@
 package az.company.cardproject.controller;
 
+import az.company.cardproject.scheduler.CashbackScheduler;
 import az.company.cardproject.service.CashbackService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,9 +13,11 @@ import java.util.Map;
 @RestController
 public class CashbackController {
     private final CashbackService cashbackService;
+    private final CashbackScheduler cashbackScheduler;
 
-    public CashbackController(CashbackService cashbackService) {
+    public CashbackController(CashbackService cashbackService, CashbackScheduler cashbackScheduler) {
         this.cashbackService = cashbackService;
+        this.cashbackScheduler = cashbackScheduler;
     }
 
     @GetMapping("/cashback")
@@ -24,4 +27,5 @@ public class CashbackController {
         response.put("cashback",cashbackAmount);
         return response;
     }
+
 }

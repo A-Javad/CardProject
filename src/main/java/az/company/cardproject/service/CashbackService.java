@@ -8,4 +8,5 @@ public class CashbackService {
     public BigDecimal calculateCashback(BigDecimal amount) {
         return amount.multiply(BigDecimal.valueOf(0.005));
     }
+
 }

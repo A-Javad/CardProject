@@ -18,12 +18,10 @@ import java.time.LocalDateTime;
 public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final CardRepository cardRepository;
-    private final CashbackClient cashbackClient;
     private final TransactionMapper transactionMapper;
-    public TransactionService(TransactionRepository transactionRepository, CardRepository cardRepository, CashbackClient cashbackClient, TransactionMapper transactionMapper) {
+    public TransactionService(TransactionRepository transactionRepository,CardRepository cardRepository,TransactionMapper transactionMapper) {
         this.transactionRepository = transactionRepository;
         this.cardRepository = cardRepository;
-        this.cashbackClient = cashbackClient;
         this.transactionMapper = transactionMapper;
     }
     @Transactional
@@ -47,15 +45,11 @@ public class TransactionService {
                 throw new IllegalArgumentException("Invalid transaction type: " + type);
         }
         Transaction transaction = createTransaction(card, type, amount, hasCashback);
-        if (Boolean.TRUE.equals(hasCashback)) {
-            BigDecimal cashbackAmount = cashbackClient.fetchCashbackAmount(amount);
-            card.setBalance(card.getBalance().add(cashbackAmount));
-            System.out.println("Cashback Amount: " + cashbackAmount);
-        }
         transactionRepository.save(transaction);
         cardRepository.save(card);
         return transactionMapper.transactionToTransactionDTO(transaction);
     }
+
     private Transaction createTransaction(Card card,String type,BigDecimal amount,Boolean hasCashback){
         Transaction transaction = new Transaction();
         transaction.setType(type);
@@ -65,6 +59,7 @@ public class TransactionService {
         transaction.setCard(card);
         return transaction;
     }
+
 
 
 }
