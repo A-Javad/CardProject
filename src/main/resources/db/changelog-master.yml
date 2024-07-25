@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changelog-0.0.2-cards.yml
+  - include:
+      file: db/changelog/changelog-0.0.3-transactions.yml
+  - include:
+      file: db/changelog/changelog-0.0.1.yml
