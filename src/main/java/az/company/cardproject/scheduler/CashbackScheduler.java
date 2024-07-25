@@ -39,9 +39,6 @@ public class CashbackScheduler {
                 System.out.println("Cashback amount  "+cashbackAmount+"add this card  :"+card.getId());
                 transaction.setHasCashback(false);
                 transactionRepository.save(transaction);
-
-
-
             }
         });
     }

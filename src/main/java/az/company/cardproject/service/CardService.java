@@ -5,10 +5,15 @@ import az.company.cardproject.mapper.CardMapper;
 import az.company.cardproject.model.dto.CardDTO;
 import az.company.cardproject.model.exception.CardNotValidException;
 
+import az.company.cardproject.specification.CardSpecification;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +28,9 @@ public class CardService {
         this.validationService = validationService;
         this.cardRepository = cardRepository;
     }
-    public List<CardDTO>getAllCards(){
+
+    public List<CardDTO>getAllCards(int page,int size){
+        Pageable pageable= PageRequest.of(page, size);
         List<Card> cards = cardRepository.findAll();
         return cards.stream()
                 .map(cardMapper::cardToCardDTO)
@@ -34,6 +41,22 @@ public class CardService {
                 .orElseThrow(() ->new RuntimeException("Card not found with id"));
         return cardMapper.cardToCardDTO(card);
 
+    }
+    public List<CardDTO>getCardsFiltered(String customerId,BigDecimal minBalance,BigDecimal maxBalance){
+        Specification<Card>specification=Specification.where(null);
+        if (customerId !=null && !customerId.isEmpty()){
+            specification=specification.and(CardSpecification.hasCustomerId(customerId));
+        }
+        if (minBalance!=null){
+            specification=specification.and(CardSpecification.hasBalanceGreaterThan(minBalance));
+        }
+        if (maxBalance!=null){
+            specification=specification.and(CardSpecification.hasBalanceLessThan(maxBalance));
+        }
+        List<Card> cards=cardRepository.findAll(specification);
+        return cards.stream()
+                .map(cardMapper::cardToCardDTO)
+                .collect(Collectors.toList());
     }
     public void saveCards(Card card){
         if (validationService.isCardNoValid(card.getPan())) {

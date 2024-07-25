@@ -13,6 +13,5 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class CashbackDTO {
     @NotNull
-
     private BigDecimal cashback;
 }
